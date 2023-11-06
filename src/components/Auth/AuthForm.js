@@ -22,7 +22,29 @@ const AuthForm = () => {
     setIsLoading(true);
 
     if (isLogin) {
-      //...
+      fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyD8ycB6q6pys2MMvD6gP4F308TdRu3RshI', {
+        method: 'POST',
+        body: JSON.stringify({
+          email: enteredEmail,
+          password: enteredPass,
+          returnSecureToken: true
+        }),
+        headers: { 'Content-Type': 'application/json' }
+      }).then(response => {
+        setIsLoading(false);
+        if (response.ok) {
+          return response.json();
+        } else {
+          return response.json().then(data => {
+            let errorMessage = 'Authentication Failed';
+            throw new Error(errorMessage);
+          })
+        }
+      })
+        .then((data) => {
+          console.log(data.idToken);
+        })
+        .catch((err) => { alert(err) })
     }
     else {
       console.log('inside else');
@@ -65,8 +87,8 @@ const AuthForm = () => {
           />
         </div>
         <div className={classes.actions}>
+          {!isLoading && <button>{isLogin ? 'Login' : 'Create Account'}</button>}
           {isLoading && <p>Sending Request...</p>}
-          <button>{isLogin ? 'Login' : 'Create Account'}</button>
           <button
             type='button'
             className={classes.toggle}
