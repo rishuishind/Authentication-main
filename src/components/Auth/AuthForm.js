@@ -19,6 +19,7 @@ const AuthForm = () => {
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -48,9 +49,8 @@ const AuthForm = () => {
         }
       })
         .then((data) => {
-          history.replace('/');
           authCtx.login(data.idToken);
-          console.log(data.idToken);
+          history.replace('/');
         })
         .catch((err) => { alert(err) })
     }
@@ -72,7 +72,6 @@ const AuthForm = () => {
           throw new Error('Authentication Failed');
         }
       }).then((data) => {
-        console.log(data);
         authCtx.login(data.idToken);
         history.replace('/');
       }).catch((err) => {
