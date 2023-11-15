@@ -1,9 +1,12 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
 
 import classes from './AuthForm.module.css';
+import { AuthContext } from '../store/auth-context';
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
+
+  const authCtx = useContext(AuthContext);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -42,12 +45,12 @@ const AuthForm = () => {
         }
       })
         .then((data) => {
+          authCtx.login(data.idToken);
           console.log(data.idToken);
         })
         .catch((err) => { alert(err) })
     }
     else {
-      console.log('inside else');
       fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyD8ycB6q6pys2MMvD6gP4F308TdRu3RshI', {
         method: 'POST',
         body: JSON.stringify({
@@ -59,12 +62,16 @@ const AuthForm = () => {
       }).then(response => {
         setIsLoading(false);
         if (response.ok) {
-
+          alert('Account created');
+          return response.json();
         } else {
-          return response.json().then(data => {
-            alert(data.error.message);
-          })
+          throw new Error('Authentication Failed');
         }
+      }).then((data) => {
+        console.log(data);
+        authCtx.login(data.idToken);
+      }).catch((err) => {
+        alert(err);
       })
     }
   }
