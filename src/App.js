@@ -22,14 +22,8 @@ function App() {
           <Route path='/auth'>
             <AuthPage />
           </Route>
-          {authCtx.isLoggenIn &&
-            <Route path='/profile'>
-              <UserProfile />
-            </Route>
-          }
-
-          <Route path='*'>
-            <Redirect to='/' />
+          <Route path='/profile'>
+            <UserProfile />
           </Route>
         </Switch>
       </Layout>
