@@ -1,5 +1,4 @@
 import { useState, useRef, useContext } from 'react';
-
 import classes from './AuthForm.module.css';
 import { AuthContext } from '../store/auth-context';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
@@ -51,6 +50,7 @@ const AuthForm = () => {
         .then((data) => {
           authCtx.login(data.idToken);
           history.replace('/');
+          authCtx.expiry((Date.now() + 20000));
         })
         .catch((err) => { alert(err) })
     }
@@ -74,12 +74,12 @@ const AuthForm = () => {
       }).then((data) => {
         authCtx.login(data.idToken);
         history.replace('/');
+        authCtx.expiry(Date.now() + 5000);
       }).catch((err) => {
         alert(err);
       })
     }
   }
-
   return (
     <section className={classes.auth}>
       <h1>{isLogin ? 'Login' : 'Sign Up'}</h1>
